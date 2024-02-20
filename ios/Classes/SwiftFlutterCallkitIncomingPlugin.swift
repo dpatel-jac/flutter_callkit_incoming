@@ -266,6 +266,11 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
         }
     }
     
+    @objc public func endCallDueToDecline(_ callId: String) {
+        guard let uuid = UUID(uuidString: callId) else { return }
+        self.sharedProvider?.reportCall(with: uuid, endedAt: nil, reason: .unanswered)
+    }
+    
     @objc public func startCall(_ data: Data, fromPushKit: Bool) {
         self.isFromPushKit = fromPushKit
         if(fromPushKit){
