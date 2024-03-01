@@ -190,7 +190,7 @@ class CallkitNotificationManager(private val context: Context) {
             notificationBuilder.addAction(acceptAction)
         }
         val notification = notificationBuilder.build()
-        notification.flags = Notification.FLAG_INSISTENT
+        notification.flags = Notification.FLAG_INSISTENT or Notification.FLAG_ONGOING_EVENT
         getNotificationManager().notify(notificationId, notification)
     }
 
