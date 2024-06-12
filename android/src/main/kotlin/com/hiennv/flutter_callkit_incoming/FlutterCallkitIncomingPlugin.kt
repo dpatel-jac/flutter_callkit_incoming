@@ -88,7 +88,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
-    private var activity: Activity? = null
+    var activity: Activity? = null
     private var context: Context? = null
     private var callkitNotificationManager: CallkitNotificationManager? = null
 
@@ -375,6 +375,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             Log.d("FlutterCallkitPlugin", "onDetachedFromActivity: called -- activity destroyed? ${activity?.isDestroyed}")
             if (activity?.isDestroyed == true) telecomUtilities.endAllActiveCalls()
         }
+        activity = null;
     }
 
     class EventCallbackHandler : EventChannel.StreamHandler {
@@ -382,6 +383,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
         private var eventSink: EventChannel.EventSink? = null
 
         override fun onListen(arguments: Any?, sink: EventChannel.EventSink) {
+            Log.i("Check For Log", "CallBack received onListen for launch ::")
             eventSink = sink
         }
 

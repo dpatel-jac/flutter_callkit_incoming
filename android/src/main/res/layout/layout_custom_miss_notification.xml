@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -32,13 +34,13 @@
         </LinearLayout>
 
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/ivAvatar"
             android:layout_width="@dimen/base_margin_x4"
             android:layout_height="@dimen/base_margin_x4"
             android:scaleType="centerCrop"
             android:visibility="visible"
-            android:src="@drawable/ic_default_avatar"/>
+            android:src="@drawable/ic_default_avatar"/>-->
     </LinearLayout>
 
     <LinearLayout
@@ -50,14 +52,23 @@
 
         <LinearLayout
             android:id="@+id/llCallback"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/rounded_button_accept"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            android:paddingHorizontal="@dimen/base_margin_x1_5"
             android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/base_margin"
+                android:src="@drawable/ic_accept"
+                android:tint="@android:color/white"
+                app:tint="@android:color/white"
+                tools:ignore="UseAppTint" />
 
             <TextView
                 android:id="@+id/tvCallback"
