@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -102,6 +103,12 @@ class FlutterCallkitIncoming {
   /// On Android: only return last call
   static Future<dynamic> activeCalls() async {
     return await _channel.invokeMethod("activeCalls");
+  }
+
+  /// Only used for android
+  static Future<dynamic> activeCallBack() async {
+    if (!Platform.isAndroid) return;
+    return await _channel.invokeMethod("activeCallBack");
   }
 
   /// Get device push token VoIP.

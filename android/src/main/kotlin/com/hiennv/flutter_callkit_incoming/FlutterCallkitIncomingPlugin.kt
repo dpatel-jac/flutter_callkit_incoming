@@ -88,6 +88,7 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
+    var callBackData: Map<String, Any?>? = null
     var activity: Activity? = null
     private var context: Context? = null
     private var callkitNotificationManager: CallkitNotificationManager? = null
@@ -303,6 +304,11 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
 
                 "activeCalls" -> {
                     result.success(getDataActiveCallsForFlutter(context))
+                }
+
+                "activeCallBack" -> {
+                    result.success(callBackData)
+                    callBackData = null;
                 }
 
                 "getDevicePushTokenVoIP" -> {

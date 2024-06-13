@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 
 class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
@@ -157,23 +155,16 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
 
             "${context.packageName}.${CallkitConstants.ACTION_CALL_CALLBACK}" -> {
                 try {
-                    val mainHandler = Handler(Looper.getMainLooper())
-                    mainHandler.post(object : Runnable {
-                        override fun run() {
-                            if (FlutterCallkitIncomingPlugin.getInstance().activity == null) {
-                                Log.i("Check For Log", "CallBack received waiting for launch ::")
-                                mainHandler.postDelayed(this, 2000)
-                            } else {
-                                Log.i("Check For Log", "CallBack received ::")
-                                callkitNotificationManager.clearMissCallNotification(data)
-                                sendEventFlutter(CallkitConstants.ACTION_CALL_CALLBACK, data)
-                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                                    val closeNotificationPanel = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-                                    context.sendBroadcast(closeNotificationPanel)
-                                }
-                            }
-                        }
-                    })
+                    callkitNotificationManager.clearMissCallNotification(data)
+                    if (FlutterCallkitIncomingPlugin.getInstance().activity == null) {
+                        FlutterCallkitIncomingPlugin.getInstance().callBackData = bundleToMap(data)
+                    } else {
+                        sendEventFlutter(CallkitConstants.ACTION_CALL_CALLBACK, data)
+                    }
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                        val closeNotificationPanel = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+                        context.sendBroadcast(closeNotificationPanel)
+                    }
                 } catch (error: Exception) {
                     Log.e(TAG, null, error)
                 }
@@ -226,5 +217,13 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                 "android" to android
         )
         FlutterCallkitIncomingPlugin.sendEvent(event, forwardData)
+    }
+
+    fun bundleToMap(bundle: Bundle): Map<String, Any?> {
+        val map = mutableMapOf<String, Any?>()
+        for (key in bundle.keySet()) {
+            map[key] = bundle.get(key)
+        }
+        return map
     }
 }
