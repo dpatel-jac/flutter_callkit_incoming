@@ -231,6 +231,8 @@ class CallkitNotificationManager(private val context: Context) {
             getPicassoInstance(context, headers).load(avatarUrl)
                     .transform(CircleTransform())
                     .into(targetLoadAvatarCustomize)
+        } else {
+            remoteViews.setViewVisibility(R.id.ivAvatar, View.GONE)
         }
     }
 
@@ -278,9 +280,15 @@ class CallkitNotificationManager(private val context: Context) {
         if (isCustomNotification) {
             notificationViews =
                     RemoteViews(context.packageName, R.layout.layout_custom_miss_notification)
+            notificationSmallViews =
+                RemoteViews(context.packageName, R.layout.layout_custom_small_miss_notification)
             notificationViews?.setTextViewText(
                     R.id.tvNameCaller,
                     data.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
+            )
+            notificationSmallViews?.setTextViewText(
+                R.id.tvNameCaller,
+                data.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
             )
             val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
             if (isShowCallID == true) {
@@ -293,6 +301,10 @@ class CallkitNotificationManager(private val context: Context) {
                     R.id.llCallback,
                     getCallbackPendingIntent(notificationId, data)
             )
+            notificationSmallViews?.setOnClickPendingIntent(
+                R.id.llCallback,
+                getCallbackPendingIntent(notificationId, data)
+            )
             val isShowCallback = data.getBoolean(
                     CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_CALLBACK_SHOW,
                     true
@@ -301,10 +313,18 @@ class CallkitNotificationManager(private val context: Context) {
                     R.id.llCallback,
                     if (isShowCallback) View.VISIBLE else View.GONE
             )
+            notificationSmallViews?.setViewVisibility(
+                R.id.llCallback,
+                if (isShowCallback) View.VISIBLE else View.GONE
+            )
             val textCallback = data.getString(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_CALLBACK_TEXT, "")
             notificationViews?.setTextViewText(
                     R.id.tvCallback,
                     if (TextUtils.isEmpty(textCallback)) context.getString(R.string.text_call_back) else textCallback
+            )
+            notificationSmallViews?.setTextViewText(
+                R.id.tvCallback,
+                if (TextUtils.isEmpty(textCallback)) context.getString(R.string.text_call_back) else textCallback
             )
 
             val avatarUrl = data.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
@@ -314,9 +334,12 @@ class CallkitNotificationManager(private val context: Context) {
 
                 getPicassoInstance(context, headers).load(avatarUrl)
                         .transform(CircleTransform()).into(targetLoadAvatarCustomize)
+            } else {
+                notificationViews?.setViewVisibility(R.id.ivAvatar, View.GONE)
+                notificationSmallViews?.setViewVisibility(R.id.ivAvatar, View.GONE)
             }
             notificationBuilder.setStyle(NotificationCompat.DecoratedCustomViewStyle())
-            notificationBuilder.setCustomContentView(notificationViews)
+            notificationBuilder.setCustomContentView(notificationSmallViews)
             notificationBuilder.setCustomBigContentView(notificationViews)
         } else {
             notificationBuilder.setContentTitle(
